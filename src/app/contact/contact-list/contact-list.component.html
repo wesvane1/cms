@@ -1,19 +1,25 @@
-<div class="row">
-  <div class="col-xs-12">
-    <h1>Contacts</h1>
-    <button class="btn btn-success">Add New Contact</button>
+<div class="container-fluid">
+  <div class="row header-row bg-red">
+    <div class="col-xs-6">
+      <h1>Contacts</h1>
+    </div>
+    <div class="col-xs-6 text-right">
+      <button class="btn btn-success">New Contact</button>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-xs-12">
-    <a href="#" class="list-group-item clearfix" *ngFor="let contact of contactList">
-      <div class="pull-left">
-        <h4 class="list-group-item-heading">{{ contact.name }}</h4>
+  
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="list-group contacts-list">
+        <a href="#" class="list-group-item" *ngFor="let contact of contactList">
+          <div class="contact-item">
+            <span class="contact-name">{{ contact.getFormattedName() }}</span>
+            <img [src]="contact.imageUrl" 
+                 [alt]="contact.name" 
+                 class="contact-image">
+          </div>
+        </a>
       </div>
-      <img 
-        [src]="contact.imageUrl"
-        alt="{{ contact.name }}"
-        class="img-responsive">
-    </a>
+    </div>
   </div>
 </div>

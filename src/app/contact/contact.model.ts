@@ -22,4 +22,9 @@ export class Contact{
     this.imageUrl = imageUrl
     this.group = group
   }
+
+  getFormattedName(): string {
+    const lastName = this.name.split(' ').pop(); // Extract the last word from the name
+    return `Bro. ${lastName}`;
+  }
 }
