@@ -24,7 +24,7 @@ export class Contact{
   }
 
   getFormattedName(): string {
-    const lastName = this.name.split(' ').pop(); // Extract the last word from the name
+    const lastName = this.name.split(' ').pop();
     return `Bro. ${lastName}`;
   }
 }
