@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'cms';
 
-  loadedFeature = '';
+  loadedFeature = 'contacts';
 
   switchView(feature: string){
     this.loadedFeature = feature

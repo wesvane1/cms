@@ -21,6 +21,7 @@ export class MessageEditComponent {
     const newMsg = new Message('4', subject, msgText, 'Wes Vane')
 
     this.addMessageEvent.emit(newMsg)
+    this.onClear()
   }
 
   onClear(){
