@@ -8,6 +8,10 @@ import { ContactComponent } from './contact/contact.component';
 import { ContactListComponent } from './contact/contact-list/contact-list.component';
 import { ContactDetailComponent } from './contact/contact-detail/contact-detail.component';
 import { ContactItemComponent } from './contact/contact-item/contact-item.component';
+import { DocumentComponent } from './document/document.component';
+import { DocumentListComponent } from './document/document-list/document-list.component';
+import { DocumentItemComponent } from './document/document-item/document-item.component';
+import { DocumentDetailComponent } from './document/document-detail/document-detail.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +20,11 @@ import { ContactItemComponent } from './contact/contact-item/contact-item.compon
     ContactComponent,
     ContactListComponent,
     ContactDetailComponent,
-    ContactItemComponent
+    ContactItemComponent,
+    DocumentComponent,
+    DocumentListComponent,
+    DocumentItemComponent,
+    DocumentDetailComponent
   ],
   imports: [
     BrowserModule,
