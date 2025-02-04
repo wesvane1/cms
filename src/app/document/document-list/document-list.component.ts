@@ -11,8 +11,6 @@ import { DocumentService } from '../document.service';
 })
 export class DocumentListComponent {
 
-  @Output() selectedDocumentEvent = new EventEmitter<Document>();
-
   documentList: Document[] = []
 
   constructor(
@@ -24,7 +22,7 @@ export class DocumentListComponent {
   }
 
   onSelect(document: Document){
-    this.selectedDocumentEvent.emit(document)
+    this.documentService.documentSelectedEvent.emit(document)
   }
 
 }
