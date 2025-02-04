@@ -11,8 +11,6 @@ import { ContactService } from '../contact.service';
 })
 export class ContactListComponent {
 
-  @Output() selectedContactEvent = new EventEmitter<Contact>();
-
   contactList: Contact[] = []
 
   constructor(
@@ -24,7 +22,7 @@ export class ContactListComponent {
   }
 
   onSelect(contact: Contact){
-    this.selectedContactEvent.emit(contact)
+    this.contactService.contactSelectedEvent.emit(contact)
   }
 
 }
