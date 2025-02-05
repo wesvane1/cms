@@ -19,6 +19,11 @@ export class MessageListComponent {
 
   ngOnInit(){
     this.messageList = this.messageService.getMessages()
+    this.messageService.messageChangedEvent.subscribe(
+      (messages: Message[]) => {
+        this.messageList = messages
+      }
+    )
   }
 
   onAddMessage(message: Message){

@@ -8,6 +8,7 @@ import { MOCKMESSAGES } from './MOCKMESSAGES';
 export class MessageService {
 
   messageSelectedEvent = new EventEmitter<Message>();
+  messageChangedEvent = new EventEmitter<Message[]>();
   
   private messages: Message[] = []
 
@@ -18,6 +19,7 @@ export class MessageService {
   getMessages(): Message[]{
     return this.messages.slice()
   }
+  
   getMessage(id: string): Message{
     for(const message of this.messages){
       if(message.id === id){
@@ -25,5 +27,10 @@ export class MessageService {
       }
     }
     return null
+  }
+
+  addMessage(message: Message){
+    this.messages.push(message);
+    this.messageChangedEvent.emit(this.messages.slice())
   }
 }
