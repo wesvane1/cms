@@ -119,6 +119,14 @@ export const MOCKCONTACTS: Contact[] = [
     imageUrl: '../../assets/images/thompsonda.jpg',
     group: null
   },
+  {
+    id: '19',
+    name: 'Wesley Vane',
+    email: 'van18004@byui.edu',
+    phone: '208-901-5469',
+    imageUrl: '../../assets/images/image-90.jpg',
+    group: null
+  },
 
   // teams
   // index 13
