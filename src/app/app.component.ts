@@ -7,11 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'cms';
+  title = 'Welcome CMS!';
 
-  loadedFeature = 'contacts';
-
-  switchView(feature: string){
-    this.loadedFeature = feature
-  }
 }
