@@ -8,9 +8,9 @@
   <div class="panel-body">
     <div class="center-panel">
       <app-document-item
-        *ngFor="let documentElement of documentList"
+        *ngFor="let documentElement of documentList; let i = index"
         [document]="documentElement"
-        (click)="onSelect(documentElement)">
+        [documentIndex]="i">
       </app-document-item>
     </div>
   </div>

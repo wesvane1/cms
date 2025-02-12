@@ -1,5 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Document } from '../document.model';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { DocumentService } from '../document.service';
 
 @Component({
   selector: 'app-document-detail',
@@ -8,8 +10,20 @@ import { Document } from '../document.model';
   templateUrl: './document-detail.component.html',
   styleUrl: './document-detail.component.scss'
 })
-export class DocumentDetailComponent {
+export class DocumentDetailComponent implements OnInit{
 
-  @Input() document: Document;
+  document: Document;
 
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly documentService: DocumentService
+  ) {}
+
+  ngOnInit() {
+    this.route.params.subscribe((params: Params) => {
+      const documentId: string = params['id']; // Ensure it's a string
+      this.document = this.documentService.getDocument(documentId);
+    });
+  }
 }

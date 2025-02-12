@@ -21,8 +21,4 @@ export class DocumentListComponent {
     this.documentList = this.documentService.getDocuments()
   }
 
-  onSelect(document: Document){
-    this.documentService.documentSelectedEvent.emit(document)
-  }
-
 }
