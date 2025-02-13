@@ -12,7 +12,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 })
 export class ContactDetailComponent implements OnInit{
 
-  @Input() contact: Contact;
+  contact: Contact;
 
   constructor(
     private readonly contactService: ContactService,
@@ -26,5 +26,10 @@ export class ContactDetailComponent implements OnInit{
       this.contact = this.contactService.getContact(contactId)
     })
   }
+
+  onDelete() {
+    this.contactService.deleteContact(this.contact);
+    this.router.navigate(['/contacts'])
+ }
 
 }

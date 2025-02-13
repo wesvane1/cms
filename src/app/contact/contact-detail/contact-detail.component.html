@@ -5,8 +5,8 @@
       [src]="contact.imageUrl" 
       alt="{{ contact.name }}">
     <div class="pull-right">
-      <button class="btn btn-primary header-btns" [routerLink]="['edit']">Edit</button>
-      <button class="btn btn-danger header-btns">Delete</button>
+      <a class="btn btn-primary header-btns" [routerLink]="['edit']">Edit</a>
+      <a class="btn btn-danger header-btns" (click)="onDelete()">Delete</a>
     </div>
   </div>
 
