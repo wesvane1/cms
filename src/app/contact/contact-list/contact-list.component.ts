@@ -21,8 +21,4 @@ export class ContactListComponent {
     this.contactList = this.contactService.getContacts()
   }
 
-  onSelect(contact: Contact){
-    this.contactService.contactSelectedEvent.emit(contact)
-  }
-
 }
