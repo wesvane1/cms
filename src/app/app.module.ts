@@ -22,6 +22,7 @@ import { DocumentService } from './document/document.service';
 import { ContactService } from './contact/contact.service';
 import { MessageService } from './message/message.service';
 import { DocumentEditComponent } from './document/document-edit/document-edit.component';
+import { WindRefService } from './wind-ref.service';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { DocumentEditComponent } from './document/document-edit/document-edit.co
   providers: [
     ContactService,
     DocumentService,
-    MessageService
+    MessageService,
+    WindRefService
   ],
   bootstrap: [AppComponent]
 })
