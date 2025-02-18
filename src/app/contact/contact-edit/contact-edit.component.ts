@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ContactService } from '../contact.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-contact-edit',
@@ -9,4 +11,15 @@ import { Component } from '@angular/core';
 })
 export class ContactEditComponent {
 
+  constructor(
+    private contactService: ContactService,
+    private router: Router,
+  ){}
+
+  onCreate(){
+    this.router.navigate(['/contacts'])
+  }
+  onUpdate(){
+    this.router.navigate(['/contacts'])
+  }
 }
