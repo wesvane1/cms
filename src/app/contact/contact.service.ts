@@ -55,7 +55,7 @@ export class ContactService {
       return maxId
     }
   
-    addDocument(newContact: Contact){
+    addContact(newContact: Contact){
       if(!newContact){
         return
       }
