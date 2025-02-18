@@ -22,10 +22,6 @@ export class DocumentListComponent implements OnInit, OnDestroy{
   ngOnInit(){
     this.documentList = this.documentService.getDocuments()
 
-    // this.documentService.documentChangedEvent.subscribe((documents: Document[]) => {
-    //   this.documentList = documents;
-    // })
-
     this.subscription = this.documentService.documentListChangedEvent.subscribe((documents: Document[]) => {
       this.documentList = documents 
     })
