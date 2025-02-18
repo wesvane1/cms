@@ -13,9 +13,11 @@ export class DocumentService {
   documentListChangedEvent = new Subject<Document[]>()
 
   private documents: Document[] = [];
+  private maxDocumentId = 0;
 
   constructor() {
     this.documents = MOCKDOCUMENTS
+    this.maxDocumentId = this.getMaxId()
   }
 
   getDocuments(): Document[]{
@@ -43,4 +45,26 @@ export class DocumentService {
     this.documents.splice(pos, 1);
     this.documentListChangedEvent.next(this.documents.slice());
  }
+ 
+  getMaxId(): number{
+    let maxId = 0
+
+    for (const document of this.documents){
+      if (+document.id > maxId){
+        maxId = +document.id
+      }
+    }
+    return maxId
+  }
+
+  addDocument(newDocument: Document){
+    if(!newDocument){
+      return
+    }
+    this.maxDocumentId++
+    newDocument.id = (this.maxDocumentId).toString()
+    this.documents.push(newDocument)
+    const documentListClone = this.documents.slice()
+    this.documentListChangedEvent.next(documentListClone)
+  }
 }
