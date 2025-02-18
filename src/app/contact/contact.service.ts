@@ -12,9 +12,11 @@ export class ContactService {
   contactListChangedEvent = new Subject<Contact[]>();
 
   private contacts: Contact[] = [];
+  private maxContactId = 0;
 
   constructor() {
     this.contacts = MOCKCONTACTS;
+    this.maxContactId = this.getMaxId()
   }
 
   getContacts(): Contact[]{
@@ -41,4 +43,26 @@ export class ContactService {
     this.contacts.splice(pos, 1);
     this.contactListChangedEvent.next(this.contacts.slice());
   }
+
+    getMaxId(): number{
+      let maxId = 0
+  
+      for (const contact of this.contacts){
+        if (+contact.id > maxId){
+          maxId = +contact.id
+        }
+      }
+      return maxId
+    }
+  
+    addDocument(newContact: Contact){
+      if(!newContact){
+        return
+      }
+      this.maxContactId++
+      newContact.id = (this.maxContactId).toString()
+      this.contacts.push(newContact)
+      const contactListClone = this.contacts.slice()
+      this.contactListChangedEvent.next(contactListClone)
+    }
 }
