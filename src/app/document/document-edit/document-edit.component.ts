@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { DocumentService } from '../document.service';
+import { Document } from '../document.model';
 
 @Component({
   selector: 'app-document-edit',
@@ -10,6 +11,11 @@ import { DocumentService } from '../document.service';
   styleUrl: './document-edit.component.scss'
 })
 export class DocumentEditComponent {
+
+  originalDocument: Document;
+  document: Document;
+  editMode: Boolean = false;
+
   constructor(
     private documentService: DocumentService,
     private router: Router,
