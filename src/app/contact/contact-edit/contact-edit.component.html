@@ -15,7 +15,7 @@
             max="120"
             name="name"
             [ngModel]="contact?.name"
-            #name
+            #name="ngModel"
             required>
         </div>
       </div>
@@ -31,11 +31,11 @@
             max="255"
             name="email"
             [ngModel]="contact?.email"
-            #email
+            #email="ngModel"
             required
             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
             <div
-              *ngIf="!email.valid && email.touched">
+              *ngIf="email.invalid && email.touched">
               <span>Enter a valid Email address</span>
             </div>
         </div>
@@ -52,10 +52,10 @@
             max="255"
             name="phone"
             [ngModel]="contact?.phone"
-            #phone
+            #phone="ngModel"
             pattern="\D*([2-9]\d{2})(\D*)([2-9]\d{2})(\D*)(\d{4})\D*">
             <div
-              *ngIf="!phone.valid && phone.touched">
+              *ngIf="phone.invalid && phone.touched">
               <span>Enter a valid phone number</span>
             </div>
         </div>
@@ -72,7 +72,7 @@
             max="255"
             name="imageUrl"
             [ngModel]="contact?.imageUrl"
-            #imageUrl>
+            #imageUrl="ngModel">
         </div>
       </div>
 
@@ -126,7 +126,7 @@
 
       <div 
         class="alert-danger"
-        *ngIf="(!name.valid && name.touched) || (!email.valid && email.touched)">
+        *ngIf="(name.invalid && name.touched) || (email.invalid && email.touched)">
         <span>The Name and Email fields are required.</span>
       </div>
 
@@ -136,7 +136,7 @@
           <button
             class="btn btn-success"
             type="submit"
-            [disabled]="!f.valid">Save</button>
+            [disabled]="f.invalid">Save</button>
           <button class="btn btn-primary" type="button" (click)="onCancel()">Cancel</button>
         </div>
       </div>
