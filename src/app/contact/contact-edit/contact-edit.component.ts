@@ -61,8 +61,17 @@ export class ContactEditComponent implements OnInit{
   }
 
   isInvalidContact(newContact: Contact): boolean {
-    if (!newContact) return true;  // No contact provided
-    if (this.contact?.id === newContact.id) return true;  // Matches current contact
-    return this.groupContacts.some(contact => contact.id === newContact.id);  // Checks in groupContacts
-  } 
+    if (!newContact) return true;
+    if (this.contact?.id === newContact.id) return true;
+    return this.groupContacts.some(contact => contact.id === newContact.id);
+  }
+  
+  addToGroup($event: any): void {
+    const selectedContact: Contact = $event.dragData;
+    if (this.isInvalidContact(selectedContact)) {
+      return;
+    }
+    this.groupContacts.push(selectedContact);
+  }
+ 
 }
