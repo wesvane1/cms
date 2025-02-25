@@ -24,6 +24,7 @@ import { MessageService } from './message/message.service';
 import { DocumentEditComponent } from './document/document-edit/document-edit.component';
 import { WindRefService } from './wind-ref.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ContactEditComponent } from './contact/contact-edit/contact-edit.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MessageEditComponent,
     MessageListComponent,
     DropdownDirective,
-    DocumentEditComponent
+    DocumentEditComponent,
+    ContactEditComponent,
   ],
   imports: [
     BrowserModule,
