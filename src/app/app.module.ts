@@ -23,6 +23,7 @@ import { ContactService } from './contact/contact.service';
 import { MessageService } from './message/message.service';
 import { DocumentEditComponent } from './document/document-edit/document-edit.component';
 import { WindRefService } from './wind-ref.service';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { WindRefService } from './wind-ref.service';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    DragDropModule,
   ],
   providers: [
     ContactService,
