@@ -73,5 +73,12 @@ export class ContactEditComponent implements OnInit{
     }
     this.groupContacts.push(selectedContact);
   }
+
+  onRemoveItem(index: number): void {
+    if (index >= 0 && index < this.groupContacts.length) {
+      this.groupContacts.splice(index, 1);
+    }
+  }
+ 
  
 }
