@@ -22,4 +22,7 @@ export class ContactEditComponent {
   onUpdate(){
     this.router.navigate(['/contacts'])
   }
+  onCancel(){
+    this.router.navigate(['/contacts'])
+  }
 }
