@@ -59,4 +59,10 @@ export class ContactEditComponent implements OnInit{
   onCancel(){
     this.router.navigate(['/contacts'])
   }
+
+  isInvalidContact(newContact: Contact): boolean {
+    if (!newContact) return true;  // No contact provided
+    if (this.contact?.id === newContact.id) return true;  // Matches current contact
+    return this.groupContacts.some(contact => contact.id === newContact.id);  // Checks in groupContacts
+  } 
 }
