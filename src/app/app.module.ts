@@ -26,6 +26,7 @@ import { WindRefService } from './wind-ref.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ContactEditComponent } from './contact/contact-edit/contact-edit.component';
 import { ContactsFilterPipe } from './contact/contacts-filter.pipe';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { ContactsFilterPipe } from './contact/contacts-filter.pipe';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    HttpClientModule,
     DragDropModule,
   ],
   providers: [
