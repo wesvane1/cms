@@ -25,6 +25,7 @@ import { DocumentEditComponent } from './document/document-edit/document-edit.co
 import { WindRefService } from './wind-ref.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ContactEditComponent } from './contact/contact-edit/contact-edit.component';
+import { ContactsFilterPipe } from './contact/contacts-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { ContactEditComponent } from './contact/contact-edit/contact-edit.compon
     DropdownDirective,
     DocumentEditComponent,
     ContactEditComponent,
+    ContactsFilterPipe,
   ],
   imports: [
     BrowserModule,
