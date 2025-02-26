@@ -47,15 +47,9 @@ export class DocumentService {
   }
 
   deleteDocument(document: Document) {
-    if (!document) {
-       return;
-    }
-    const pos = this.documents.indexOf(document);
-    if (pos < 0) {
-       return;
-    }
-    this.documents.splice(pos, 1);
-    this.documentListChangedEvent.next(this.documents.slice());
+    if (!document) return;
+    this.documents = this.documents.filter(doc => doc.id !== document.id);
+    this.storeDocuments();
  }
  
   getMaxId(): number{
@@ -76,8 +70,7 @@ export class DocumentService {
     this.maxDocumentId++
     newDocument.id = (this.maxDocumentId).toString()
     this.documents.push(newDocument)
-    const documentListClone = this.documents.slice()
-    this.documentListChangedEvent.next(documentListClone)
+    this.storeDocuments()
   }
 
   updateDocument(originalDocument: Document, newDocument: Document){
@@ -92,7 +85,19 @@ export class DocumentService {
 
     newDocument.id = originalDocument.id
     this.documents[pos] = newDocument
-    const documentsListClone = this.documents.slice()
-    this.documentListChangedEvent.next(documentsListClone)
+    this.storeDocuments()
+  }
+
+  storeDocuments(){
+    const documentsJSON = JSON.stringify(this.documents);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.put(
+      'https://cms-9f75e-default-rtdb.firebaseio.com/documents.json',
+      documentsJSON,
+      {headers}
+      ).subscribe(() => {
+      const documentListClone = this.documents.slice()
+      this.documentListChangedEvent.next(documentListClone)
+    })
   }
 }
