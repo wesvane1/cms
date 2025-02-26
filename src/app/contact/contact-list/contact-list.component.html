@@ -1,38 +1,29 @@
-<!-- <div class="panel panel-default">
-  <div class="panel panel-heading contact-list-head">
-    <h1>Contacts</h1>
-    <button class="btn btn-success" routerLink="new">New Contact</button>
-  </div>
-  
-  <div class="panel-body">
-    <div class="col-xs-12">
-      <div class="list-group contacts-list">
-        <app-contact-item 
-          *ngFor="let contactElement of contactList;"
-          [contact]="contactElement"
-          dnd-draggable [dragEnabled]="true" [dragData]="contactElement" [dropZones]="['contactGroup']">
-        </app-contact-item>
-      </div>
-    </div>
-  </div>
-</div> -->
-
 <div class="panel panel-default">
-  <div class="panel panel-heading contact-list-head">
-    <h1>Contacts</h1>
-    <button class="btn btn-success" routerLink="new">New Contact</button>
+  <div class="panel-heading contact-list-head">
+    <div class="col-xs-6">
+      <h1>Contacts</h1>
+    </div>
+    <div class="col-xs-6">
+      <button class="btn btn-success pull-right" routerLink="new">New Contact</button>
+    </div>
+      <div class="input-group col-xs-7 pad-left-right">
+        <span class="glyphicon glyphicon-search input-group-addon"></span>
+        <input
+          #searchBox
+          type="text"
+          class="form-control"
+          placeholder="Search contacts..."
+          (input)="search(searchBox.value)"
+        />
+      </div>
   </div>
 
   <div class="panel-body">
     <div class="col-xs-12">
       <div class="list-group contacts-list">
         <app-contact-item
-          *ngFor="let contactElement of contactList"
-          [contact]="contactElement"
-          cdkDrag
-          [cdkDragData]="contactElement"
-          [cdkDropList]="['contactGroup']"
-        >
+          *ngFor="let contactElement of contactList | contactsFilter:term:'status'"
+          [contact]="contactElement">
         </app-contact-item>
       </div>
     </div>
