@@ -2,6 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Document } from './document.model';
 import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
 import { Subject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +16,24 @@ export class DocumentService {
   private documents: Document[] = [];
   private maxDocumentId = 0;
 
-  constructor() {
+  constructor(
+    private http: HttpClient,
+  ) {
     this.documents = MOCKDOCUMENTS
     this.maxDocumentId = this.getMaxId()
   }
 
   getDocuments(): Document[]{
+    this.http.get<Document[]>('https://cms-9f75e-default-rtdb.firebaseio.com/documents.json').subscribe((documents: Document[]) => {
+      this.documents = documents
+      this.maxDocumentId = this.getMaxId()
 
+      this.documents.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+      this.documentListChangedEvent.next(this.documents.slice());
+
+    }, (error: any) => {
+      console.error('Error fetching documents: ', error)
+    })
     return this.documents.slice()
   }
 
