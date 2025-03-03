@@ -21,6 +21,20 @@ export class ContactService {
     this.maxContactId = this.getMaxId()
   }
 
+  getContacts(): Contact[]{
+    this.http.get<Contact[]>('http://localhost:3000/contacts').subscribe((contacts: Contact[]) => {
+      this.contacts = contacts
+      this.maxContactId = this.getMaxId()
+
+      this.contacts.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+      this.contactListChangedEvent.next(this.contacts.slice());
+
+    }, (error: any) => {
+      console.error('Error fetching contacts: ', error)
+    })
+    return this.contacts.slice()
+  }
+
   getContact(id: string): Contact{
     for(const contact of this.contacts){
       if(contact.id === id){
@@ -30,78 +44,96 @@ export class ContactService {
     return null
   }
 
+  getMaxId(): number{
+    let maxId = 0
+
+    for (const contact of this.contacts){
+      if (+contact.id > maxId){
+        maxId = +contact.id
+      }
+    }
+    return maxId
+  }
+
+  addDocument(contact: Contact) {
+    if (!contact) {
+      return;
+    }
+    // make sure id of the new Document is empty
+    contact.id = '';
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    // add to database
+    this.http.post<{ message: string, contact: Contact }>('http://localhost:3000/contacts',
+      contact,
+      { headers: headers })
+      .subscribe(
+        (responseData) => {
+          // add new document to documents
+          this.contacts.push(responseData.contact);
+          this.sortAndSend();
+        }
+      );
+  }
+
+  updateContact(originalContact: Contact, newContact: Contact) {
+    if (!originalContact || !newContact) {
+      return;
+    }
+    const pos = this.contacts.findIndex(d => d.id === originalContact.id);
+    if (pos < 0) {
+      return;
+    }
+    // set the id of the new Document to the id of the old Document
+    newContact.id = originalContact.id;
+    newContact.id = originalContact.id;
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    // update database
+    this.http.put('http://localhost:3000/contacts/' + originalContact.id,
+      newContact, { headers: headers })
+      .subscribe(
+        (response: Response) => {
+          this.contacts[pos] = newContact;
+          this.sortAndSend();
+        }
+      );
+  }
+
   deleteContact(contact: Contact) {
     if (!contact) {
-        return;
+      return;
     }
-    const pos = this.contacts.indexOf(contact);
+    const pos = this.contacts.findIndex(d => d.id === contact.id);
     if (pos < 0) {
-        return;
+      return;
     }
-    this.contacts.splice(pos, 1);
-    this.storeContacts();
-}
-
-    getMaxId(): number{
-      let maxId = 0
-  
-      for (const contact of this.contacts){
-        if (+contact.id > maxId){
-          maxId = +contact.id
+    // delete from database
+    this.http.delete('http://localhost:3000/contacts/' + contact.id)
+      .subscribe(
+        (response: Response) => {
+          this.contacts.splice(pos, 1);
+          this.sortAndSend();
         }
-      }
-      return maxId
-    }
-  
-    addContact(newContact: Contact){
-      if(!newContact){
-        return
-      }
-      this.maxContactId++
-      newContact.id = (this.maxContactId).toString()
-      this.contacts.push(newContact)
-      this.storeContacts()
-    }
+      );
+  }
 
-    updateContact(originalContact: Contact, newContact: Contact){
-      if(!originalContact || !newContact){
-        return
+  sortAndSend() {
+    const contactsJSON = JSON.stringify(this.contacts); // Convert documents to JSON string
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    
+    // Send the updated documents to the backend
+    this.http.put(
+      'http://localhost:3000/contacts', // Use your local Node.js server URL
+      contactsJSON,
+      { headers }
+    ).subscribe(
+      () => {
+        // Once the documents are successfully stored, notify other components
+        const contactListClone = this.contacts.slice(); // Clone the document list to avoid reference issues
+        this.contactListChangedEvent.next(contactListClone); // Emit the updated documents list
+      },
+      (error) => {
+        console.error('Error storing contacts:', error); // Error handling
       }
-  
-      const pos = this.contacts.indexOf(originalContact)
-      if(pos < 0){
-        return
-      }
-  
-      newContact.id = originalContact.id
-      this.contacts[pos] = newContact
-      this.storeContacts()
-    }
-
-    getContacts(): Contact[]{
-      this.http.get<Contact[]>('https://cms-9f75e-default-rtdb.firebaseio.com/contacts.json').subscribe((contacts: Contact[]) => {
-        this.contacts = contacts
-        this.maxContactId = this.getMaxId()
-  
-        this.contacts.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
-        this.contactListChangedEvent.next(this.contacts.slice());
-  
-      }, (error: any) => {
-        console.error('Error fetching contacts: ', error)
-      })
-      return this.contacts.slice()
-    }
-
-    storeContacts(){
-      const contactsJSON = JSON.stringify(this.contacts);
-      const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-      this.http.put(
-        'https://cms-9f75e-default-rtdb.firebaseio.com/contacts.json',
-        contactsJSON,
-        {headers}
-        ).subscribe(() => {
-        const contactListClone = this.contacts.slice()
-        this.contactListChangedEvent.next(contactListClone)
-      })
-    }
+    );
+  }
 }

@@ -20,6 +20,20 @@ export class MessageService {
   ) {
     this.messages = this.getMessages()
   }
+
+  getMessages(): Message[]{
+    this.http.get<Message[]>('http://localhost:3000/contacts').subscribe((messages: Message[]) => {
+      this.messages = messages
+      this.maxMessageId = this.getMaxId()
+
+      this.messages.sort((a, b) => (a.sender < b.sender ? -1 : a.sender > b.sender ? 1 : 0));
+      this.messageChangedEvent.next(this.messages.slice());
+
+    }, (error: any) => {
+      console.error('Error fetching contacts: ', error)
+    })
+    return this.messages.slice()
+  }
   
   getMessage(id: string): Message{
     for(const message of this.messages){
@@ -30,15 +44,24 @@ export class MessageService {
     return null
   }
 
-  addMessage(message: Message){
-    if(!message){
-      return
+  addMessage(message: Message) {
+    if (!message) {
+      return;
     }
-    this.maxMessageId++
-    message.id = (this.maxMessageId).toString()
-    this.messages.push(message);
-    // this.messageChangedEvent.emit(this.messages.slice())
-    this.storeMessages()
+    // make sure id of the new Document is empty
+    message.id = '';
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    // add to database
+    this.http.post<{ messageText: string, message: Message }>('http://localhost:3000/messages',
+      message,
+      { headers: headers })
+      .subscribe(
+        (responseData) => {
+          // add new document to documents
+          this.messages.push(responseData.message);
+          this.sortAndSend();
+        }
+      );
   }
   getMaxId(): number{
     let maxId = 0
@@ -50,31 +73,25 @@ export class MessageService {
     }
     return maxId
   }
-
-  getMessages(): Message[]{
-    this.http.get<Message[]>('https://cms-9f75e-default-rtdb.firebaseio.com/messages.json').subscribe((messages: Message[]) => {
-      this.messages = messages
-      this.maxMessageId = this.getMaxId()
-
-      this.messages.sort((a, b) => (a.sender < b.sender ? -1 : a.sender > b.sender ? 1 : 0));
-      this.messageChangedEvent.next(this.messages.slice());
-
-    }, (error: any) => {
-      console.error('Error fetching messages: ', error)
-    })
-    return this.messages.slice()
-  }
-
-  storeMessages(){
-    const messagesJSON = JSON.stringify(this.messages);
+  
+  sortAndSend() {
+    const messagesJSON = JSON.stringify(this.messages); // Convert documents to JSON string
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    
+    // Send the updated documents to the backend
     this.http.put(
-      'https://cms-9f75e-default-rtdb.firebaseio.com/messages.json',
+      'http://localhost:3000/messages', // Use your local Node.js server URL
       messagesJSON,
-      {headers}
-      ).subscribe(() => {
-      const messageListClone = this.messages.slice()
-      this.messageChangedEvent.next(messageListClone);
-    })
+      { headers }
+    ).subscribe(
+      () => {
+        // Once the documents are successfully stored, notify other components
+        const messageListClone = this.messages.slice(); // Clone the document list to avoid reference issues
+        this.messageChangedEvent.next(messageListClone); // Emit the updated documents list
+      },
+      (error) => {
+        console.error('Error storing messages:', error); // Error handling
+      }
+    );
   }
 }
