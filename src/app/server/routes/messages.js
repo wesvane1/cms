@@ -11,29 +11,29 @@ router.get('/', (req, res, next) => {
   })
 })
 
-router.post('/', (req, res, next) => {
-  const maxMessageId = sequenceGenerator.nextId("messages");
+router.post('/', async (req, res, next) => {
+  try {
+    const maxMessageId = sequenceGenerator.nextId("messages");
 
-  const message = new Message({
-    id: maxMessageId,
-    subject: req.body.subject,
-    msgText: req.body.msgText,
-    sender: req.body.sender
-  });
-
-  message.save()
-    .then(createdMessage => {
-      res.status(201).json({
-        message: 'Message added successfully',
-        document: createdMessage
-      });
-    })
-    .catch(error => {
-       res.status(500).json({
-          message: 'An error occurred',
-          error: error
-        });
+    const message = new Message({
+      id: maxMessageId,
+      subject: req.body.subject,
+      msgText: req.body.msgText,
+      sender: req.body.sender
     });
+
+    const createdMessage = await message.save();
+    res.status(201).json({
+      message: 'Message added successfully',
+      contact: createdMessage
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: 'An error occurred',
+      error: error
+    });
+  }
 });
 
 router.put('/:id', (req, res, next) => {
