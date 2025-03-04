@@ -87,7 +87,7 @@ export class DocumentService {
     }
     // set the id of the new Document to the id of the old Document
     newDocument.id = originalDocument.id;
-    newDocument.id = originalDocument.id;
+    // newDocument.id = originalDocument.id;
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     // update database
     this.http.put('http://localhost:3000/documents/' + originalDocument.id,

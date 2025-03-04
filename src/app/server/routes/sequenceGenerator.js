@@ -1,62 +1,70 @@
-var Sequence = require('../models/sequence');
+const Sequence = require('../models/sequence');
 
-var maxDocumentId;
-var maxMessageId;
-var maxContactId;
-var sequenceId = null;
+let maxDocumentId;
+let maxMessageId;
+let maxContactId;
+let sequenceId = null;
 
-function SequenceGenerator() {
+async function initializeSequence() {
+  try {
+    // Fetch the sequence from the database
+    const sequence = await Sequence.findOne();
 
-  Sequence.findOne()
-    .exec(function(err, sequence) {
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
+    if (!sequence) {
+      throw new Error('Sequence not found');
+    }
 
-      sequenceId = sequence._id;
-      maxDocumentId = sequence.maxDocumentId;
-      maxMessageId = sequence.maxMessageId;
-      maxContactId = sequence.maxContactId;
-    });
+    // Initialize variables with sequence data
+    sequenceId = sequence._id;
+    maxDocumentId = sequence.maxDocumentId;
+    maxMessageId = sequence.maxMessageId;
+    maxContactId = sequence.maxContactId;
+  } catch (err) {
+    console.error('Error initializing sequence:', err);
+  }
 }
 
-SequenceGenerator.prototype.nextId = function(collectionType) {
+// Call this function to initialize sequence values when the application starts
+initializeSequence();
 
-  var updateObject = {};
-  var nextId;
+// The nextId function can be used to get the next ID for a given collection type
+async function nextId(collectionType) {
+  let updateObject = {};
+  let nextId;
 
   switch (collectionType) {
     case 'documents':
       maxDocumentId++;
-      updateObject = {maxDocumentId: maxDocumentId};
+      updateObject = { maxDocumentId: maxDocumentId };
       nextId = maxDocumentId;
       break;
     case 'messages':
       maxMessageId++;
-      updateObject = {maxMessageId: maxMessageId};
+      updateObject = { maxMessageId: maxMessageId };
       nextId = maxMessageId;
       break;
     case 'contacts':
       maxContactId++;
-      updateObject = {maxContactId: maxContactId};
+      console.log("MAX CONTACT ID SEQUENCE1: ", maxContactId)
+      updateObject = { maxContactId: maxContactId };
       nextId = maxContactId;
+      console.log("MAX CONTACT ID SEQUENCE2: ", nextId)
       break;
     default:
-      return -1;
+      return -1; // Invalid collection type
   }
 
-  Sequence.update({_id: sequenceId}, {$set: updateObject},
-    function(err) {
-      if (err) {
-        console.log("nextId error = " + err);
-        return null
-      }
-    });
-
-  return nextId;
+  try {
+    // Update the sequence in the database
+    await Sequence.updateOne({ _id: sequenceId }, { $set: updateObject });
+    return nextId;
+  } catch (err) {
+    console.error("Error updating nextId:", err);
+    return null;
+  }
 }
 
-module.exports = new SequenceGenerator();
+module.exports = {
+  initializeSequence,
+  nextId
+};

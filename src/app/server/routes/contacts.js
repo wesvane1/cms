@@ -11,31 +11,31 @@ router.get('/', (req, res, next) => {
   })
 })
 
-router.post('/', (req, res, next) => {
-  const maxContactId = sequenceGenerator.nextId("contacts");
+router.post('/', async (req, res, next) => {
+  try {
+    const maxContactId = await sequenceGenerator.nextId("contacts"); // ✅ Await the result
 
-  const contact = new Contact({
-    id: maxContactId,
-    name: req.body.name,
-    email: req.body.email,
-    phone: req.body.phone,
-    imageUrl: req.body.imageUrl,
-    group: req.body.group
-  });
-
-  contact.save()
-    .then(createdContact => {
-      res.status(201).json({
-        message: 'Contact added successfully',
-        contact: createdContact
-      });
-    })
-    .catch(error => {
-       res.status(500).json({
-          message: 'An error occurred',
-          error: error
-        });
+    const contact = new Contact({
+      id: maxContactId, // ✅ Now maxContactId is a resolved value, not a Promise
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      imageUrl: req.body.imageUrl,
+      group: req.body.group
     });
+
+    const createdContact = await contact.save(); // ✅ Await the save operation
+    res.status(201).json({
+      message: 'Contact added successfully',
+      contact: createdContact
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: 'An error occurred',
+      error: error
+    });
+  }
 });
 
 router.put('/:id', (req, res, next) => {

@@ -22,7 +22,7 @@ export class MessageService {
   }
 
   getMessages(): Message[]{
-    this.http.get<Message[]>('http://localhost:3000/contacts').subscribe((messages: Message[]) => {
+    this.http.get<Message[]>('http://localhost:3000/messages').subscribe((messages: Message[]) => {
       this.messages = messages
       this.maxMessageId = this.getMaxId()
 

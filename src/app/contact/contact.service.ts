@@ -55,12 +55,11 @@ export class ContactService {
     return maxId
   }
 
-  addDocument(contact: Contact) {
+  addContact(contact: Contact) {
     if (!contact) {
       return;
     }
     // make sure id of the new Document is empty
-    contact.id = '';
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     // add to database
     this.http.post<{ message: string, contact: Contact }>('http://localhost:3000/contacts',
@@ -71,6 +70,7 @@ export class ContactService {
           // add new document to documents
           this.contacts.push(responseData.contact);
           this.sortAndSend();
+          // this.storeContacts();
         }
       );
   }
@@ -85,7 +85,7 @@ export class ContactService {
     }
     // set the id of the new Document to the id of the old Document
     newContact.id = originalContact.id;
-    newContact.id = originalContact.id;
+    // newContact.id = originalContact.id;
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     // update database
     this.http.put('http://localhost:3000/contacts/' + originalContact.id,
@@ -119,21 +119,20 @@ export class ContactService {
   sortAndSend() {
     const contactsJSON = JSON.stringify(this.contacts); // Convert documents to JSON string
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    
-    // Send the updated documents to the backend
+  
     this.http.put(
       'http://localhost:3000/contacts', // Use your local Node.js server URL
       contactsJSON,
       { headers }
     ).subscribe(
       () => {
-        // Once the documents are successfully stored, notify other components
-        const contactListClone = this.contacts.slice(); // Clone the document list to avoid reference issues
-        this.contactListChangedEvent.next(contactListClone); // Emit the updated documents list
+        const contactListClone = this.contacts.slice();
+        this.contactListChangedEvent.next(contactListClone);
       },
       (error) => {
-        console.error('Error storing contacts:', error); // Error handling
+        console.error('Error storing contacts:', error);
       }
     );
   }
+  
 }

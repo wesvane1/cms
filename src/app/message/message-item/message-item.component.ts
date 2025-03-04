@@ -6,7 +6,6 @@ import { Contact } from '../../contact/contact.model';
 @Component({
   selector: 'app-message-item',
   standalone: false,
-  
   templateUrl: './message-item.component.html',
   styleUrl: './message-item.component.scss'
 })
@@ -14,15 +13,21 @@ export class MessageItemComponent {
   
   @Input() message: Message;
   
-  messageSender: string;
+  messageSender?: string;
 
-  constructor(
-    private contactService: ContactService
-  ) {}
-
+  constructor(private contactService: ContactService) {}
 
   ngOnInit() {
-    const contact: Contact = this.contactService.getContact(this.message.sender);
-    this.messageSender = contact.name;
+    console.log("Message Sender: ", this.message.sender)
+    if(this.message.sender){
+      const contact: Contact = this.contactService.getContact(this.message.sender);
+  
+      console.log("CONTACT DATA: ", contact);
+  
+      // Handle cases where contact is undefined
+      this.messageSender = contact.name;
+    } else{
+      this.messageSender = "Unknown";
+    }
   }
 }
